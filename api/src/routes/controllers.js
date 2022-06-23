@@ -24,7 +24,7 @@ const getCountries = async (req, res) => {
   const { name } = req.query;
   const apiInfo = await getInfoApi()
   const countries = await Country.findAll({
-    attributes: ['name', 'img', 'continent']
+    attributes: ['id', 'name', 'img', 'continent']
   });
   try {
     if(countries.length === 0) {
@@ -42,6 +42,10 @@ const getCountries = async (req, res) => {
           }
         })
       });
+      const createdCountries = await Country.findAll({
+        attributes: ['id', 'name', 'img', 'continent']
+      })
+      return res.status(200).send(createdCountries);
     }
     if(name) {
       const names = countries.map(c => c.name);
@@ -67,13 +71,7 @@ const getCountriesById = (req, res) => {
       model: TouristActivity,
       through: {
         attributes: []
-      },
-      attributes: {
-        exclude: ["createdAt", "updatedAt"]
       }
-    },
-    attributes: {
-      exclude: ["createdAt", "updatedAt"]
     }
   })
   .then(r => {
@@ -83,20 +81,40 @@ const getCountriesById = (req, res) => {
 };
 
 const postActivities = async (req, res) => {
-  const { name, difficulty, duration, seanson, countryId } = req.body
+  const { name, difficulty, duration, seanson, countryId } = req.body;
   try {
-    const createdActivity = await TouristActivity.findOrCreate({
-      where: {
-        name: name,
-        difficulty: difficulty,
-        duration: duration,
-        seanson: seanson
+    if(!name || !difficulty || !duration || !seanson || !countryId) return res.status(400).send({data: 'Missing Data'})
+
+    const foundCountry = await Country.findAll({
+      where:{
+        id: countryId,
+      },
+      include: {
+        model: TouristActivity,
+        attributes: ['name'],
+        through: {
+          attributes: []
+        }
       }
     })
-    await createdActivity.addCountries(countryId)
-    res.status(200).send({data: 'ok'})
+    const foundActivity = foundCountry.map(a => a.touristActivities).flat()
+    const foundNameActivity = foundActivity.map(a => a.dataValues.name)
+    if(foundNameActivity.length)
+    for (const e of foundNameActivity) {
+      if(e.toLowerCase() === name.toLowerCase()) return res.status(400).send({data: 'The selected country already has that activity'}) 
+    }
+    const createdActivity = await TouristActivity.create({
+      name: name,
+      difficulty: difficulty,
+      duration: Number(duration),
+      seanson: seanson,
+    })
+
+      await createdActivity.addCountries(countryId)
+      return res.status(200).send({data: 'Activity created succesfully'})  
+
   } catch (error) {
-    res.status(404).send({data: error})
+    res.status(404).send({data: error.message})
   }
 };
 module.exports = {
