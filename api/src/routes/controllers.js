@@ -117,8 +117,110 @@ const postActivities = async (req, res) => {
     res.status(404).send({data: error.message})
   }
 };
+
+// ----------- FILTERS------------
+
+const getAllActivities =  (req, res) => {
+    TouristActivity.aggregate('name', 'DISTINCT', { plain: false })
+    .then(r => {
+      res.status(200).send(r);
+    })
+    .catch(error => {
+      res.status(404).send({ data: error.message })
+    })   
+};
+
+const getCountriesWhereActivity = async (req, res)=>{
+  const {nameActivity} = req.query
+  try {
+    const countries = await Country.findAll({
+      include: {
+        model: TouristActivity,
+        through: {
+          attributes: []
+        }
+      }
+    })
+
+    const filteredCountries =[];
+    if(nameActivity === 'all'){
+      for (const c of countries) {
+        if(c.touristActivities.length > 0){
+          filteredCountries.push(c)
+        }
+      }
+    }else {
+      for (const c of countries) {
+        c.touristActivities.forEach(a => {
+          if(a.dataValues.name.toLowerCase() === nameActivity.toLowerCase()){
+            filteredCountries.push(c);
+          }
+        })
+      }
+    }
+    filteredCountries.length? res.status(200).send(filteredCountries) : res.status(400).send({ data: 'No countries found with associated activity' })
+  } catch (error) {
+    res.status(404).send({ data: error.message })
+  }
+};
+
+const getAllContinents = (req, res) => {
+  Country.findAll({
+    attributes: ['continent'],
+  })
+  .then(r => {
+    const continents = [...new Set(r.map(c => c.continent))];    
+    res.status(200).send(continents);
+  })
+  .catch(err => res.status(404).send({ data: err.message }))
+};
+
+const getCountriesWhereContinent = async(req, res) => {
+  const {nameContinent} = req.query;
+  try {
+    if(nameContinent === 'all'){
+      const allCountries = await Country.findAll()
+      res.status(200).send(allCountries)
+    }else {
+      const countries = await Country.findAll({
+        where:{
+          continent: nameContinent,
+        }
+      })
+      res.status(200).send(countries);
+    }
+  } catch (error) {
+    res.status(404).send({ data: error.message })
+  }
+};
+
+const filterCountriesByPopulation = (req, res) => {
+  const { typeOrder } = req.query;
+  Country.findAll({
+    attributes:  ['id', 'name', 'img', 'continent', 'population']
+  })
+  .then(r => {
+    const countries = r.map(c => c.dataValues)
+    if(typeOrder === 'all') return res.status(200).send(countries);
+    if(typeOrder === 'asc'){
+      const filteredCountries = countries.sort((a, b) => a.population - b.population)
+      return res.status(200).send(filteredCountries);
+    }
+    if(typeOrder === 'desc'){
+      const filteredCountries = countries.sort((a, b) => b.population - a.population)
+      return res.status(200).send(filteredCountries);
+    }
+  })
+  .catch(err => res.status(404).send({ data: err.message }))
+}
+
 module.exports = {
   getCountries,
   getCountriesById,
   postActivities,
+  getAllActivities,
+  getCountriesWhereActivity,
+  getAllContinents,
+  getCountriesWhereContinent,
+  filterCountriesByPopulation,
 }
