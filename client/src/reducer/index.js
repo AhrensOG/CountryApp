@@ -7,16 +7,23 @@ import {
   FILTER_BY_NAME,
   FILTER_BY_POPULATION,
   GET_COUNTRIES_BY_NAME,
+  CREATE_ACTIVITY,
+  COUNTRY_DETAIL,
 } from "../actions/actions";
 
 const initialState = {
   countries: [],
   activities: [],
   continents: [],
+  countryDetail: {}
 }
 
 function rootReducer (state = initialState, action){
   switch (action.type) {
+    case CREATE_ACTIVITY:
+      return {
+        ...state,
+      }
     case GET_ALL_COUNTRIES:
       return {
         ...state,
@@ -48,11 +55,11 @@ function rootReducer (state = initialState, action){
         countries: action.payload,
       }
     case FILTER_BY_NAME:
-      const orderedArr = action.payload === 'asc' ? state.allCountries.sort((a, b) => {
+      const orderedArr = action.payload === 'asc' ? state.countries.sort((a, b) => {
         if(a.name > b.name) return 1;
         if(b.name > a.name) return -1;
         return 0;
-      }): state.allCountries.sort((a, b) => {
+      }): state.countries.sort((a, b) => {
         if(a.name > b.name) return -1;
         if(b.name > a.name) return 1;
         return 0
@@ -65,6 +72,11 @@ function rootReducer (state = initialState, action){
       return {
         ...state,
         countries: action.payload
+      }
+    case COUNTRY_DETAIL:
+      return {
+        ...state,
+        countryDetail: action.payload,
       }
     default:
       return state;

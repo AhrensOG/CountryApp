@@ -8,7 +8,20 @@ import {
   FILTER_BY_NAME,
   FILTER_BY_POPULATION,
   GET_COUNTRIES_BY_NAME,
+  CREATE_ACTIVITY,
+  COUNTRY_DETAIL,
 } from './actions';
+
+function createActivity (payload){
+  return async (dispatch) => {
+    try {
+      const countries = await axios.post('http://localhost:3001/activities',payload)
+      return countries;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+} 
 
 function getAllCountries() {
   return async (dispatch) => {
@@ -94,6 +107,20 @@ function filterByPopulation(value){
     .catch(err => err.message)
   }
 }
+
+function getCountryDetail(id) {
+  return (dispatch) => {
+    axios.get(`http://localhost:3001/countries/${id}`)
+    .then(r => {
+      return dispatch({
+        type: COUNTRY_DETAIL,
+        payload: r.data,
+      })
+    })
+    .catch(err => console.log(err.message))
+  }
+}
+
 export { 
   getAllCountries,
   getAllActivities,
@@ -103,4 +130,6 @@ export {
   filterByName,
   filterByPopulation,
   getCountriesByName,
+  createActivity,
+  getCountryDetail,
 };

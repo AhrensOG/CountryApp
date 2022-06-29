@@ -83,21 +83,26 @@ export default function Home(){
 
   return (
     <div>
+
+      <div>
+        <Link to='/activities'> Create Activity </Link>
+      </div>
+
       <div>
           <button onClick={e => handleResetFilters(e)}> ResetFilters </button>
 
         <select onChange={e => handleFilterByName(e)}>
           <option key='' value=""> OrderByName </option>
           <option key='none' value="none"> All </option>
-          <option key='asc' value="asc"> Ascendent </option>
-          <option key='desc' value="desc"> Descendent </option>
+          <option key='asc' value="asc"> A - Z </option>
+          <option key='desc' value="desc"> Z - A  </option>
         </select>
 
         <select onChange={e => handleFilterByPopulation(e)}>
           <option value=''> OrderByPopulation </option>
           <option value="all"> All </option>
-          <option value="asc"> Ascendent </option>
-          <option value="desc"> Descendent </option>
+          <option value="asc"> Min - Max </option>
+          <option value="desc"> Max - Min </option>
         </select>
 
         <select onChange={e => handleFilterActivity(e)}>
@@ -132,9 +137,7 @@ export default function Home(){
         {
           currentCountries?.map(c => {
             return (
-              <Link to={`/home/${c.id}`}>
-                <Card img={c.img} name={c.name} continent={c.continent} key={c.id}/>
-              </Link>
+              <Card img={c.img} name={c.name} continent={c.continent} id={c.id} key={c.id}/>
             )
           })
         }

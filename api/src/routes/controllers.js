@@ -9,9 +9,9 @@ const getInfoApi = async () => {
       id : e.cca3,
       name: e.name.common,
       imgFlag: e.flags[0],
-      continent: (e.continents[0] !== undefined)? e.continents[0] : 'Desconocido',
-      capital: (Array.isArray(e.capital))? (e.capital[0])? e.capital[0] : 'Desconocido' : 'Desconocido',
-      subregion: (e.subregion)? e.subregion : 'Desconocido',
+      continent: (e.continents[0] !== undefined)? e.continents[0] : 'Unknow',
+      capital: (Array.isArray(e.capital))? (e.capital[0])? e.capital[0] : 'Unknow' : 'Unknow',
+      subregion: (e.subregion)? e.subregion : 'Unknow',
       area: e.area,
       population: e.population,
     }
@@ -81,13 +81,13 @@ const getCountriesById = (req, res) => {
 };
 
 const postActivities = async (req, res) => {
-  const { name, difficulty, duration, seanson, countryId } = req.body;
+  const { name, difficulty, duration, season, countryName } = req.body;
   try {
-    if(!name || !difficulty || !duration || !seanson || !countryId) return res.status(400).send({data: 'Missing Data'})
+    if(!countryName.length) return res.status(400).send({data: 'Missing Data'})
 
     const foundCountry = await Country.findAll({
       where:{
-        id: countryId,
+        name: countryName,
       },
       include: {
         model: TouristActivity,
@@ -99,19 +99,20 @@ const postActivities = async (req, res) => {
     })
     const foundActivity = foundCountry.map(a => a.touristActivities).flat()
     const foundNameActivity = foundActivity.map(a => a.dataValues.name)
-    if(foundNameActivity.length)
-    for (const e of foundNameActivity) {
-      if(e.toLowerCase() === name.toLowerCase()) return res.status(400).send({data: 'The selected country already has that activity'}) 
+    if(foundNameActivity.length) {
+      for (const e of foundNameActivity) {
+        if(e.toLowerCase() === name.toLowerCase()) return res.status(400).send({data: 'The selected country already has that activity'}) 
+      }
     }
     const createdActivity = await TouristActivity.create({
-      name: name,
-      difficulty: difficulty,
-      duration: Number(duration),
-      seanson: seanson,
+      name: name? name : 'Unknow',
+      difficulty: difficulty? difficulty : 'Unknow',
+      duration: duration? Number(duration): 'Unknow',
+      season: season? season : 'Unknow',
     })
-
-      await createdActivity.addCountries(countryId)
-      return res.status(200).send({data: 'Activity created succesfully'})  
+    const countryId = foundCountry.map(c => c.id)
+    await createdActivity.addCountries(countryId)
+    return res.status(200).send({data: 'Activity created succesfully'})  
 
   } catch (error) {
     res.status(404).send({data: error.message})
