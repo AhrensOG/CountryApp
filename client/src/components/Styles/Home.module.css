@@ -1,0 +1,57 @@
+.paged {
+  display: flex;
+  justify-content: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 75px;
+}
+
+.search_create {
+  display: flex;
+  justify-content: center;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  color: lightgrey;
+  background-color: lightslategray;
+  border: 1px solid lightslategrey;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  margin: 10px 10px 10px 1px;
+  cursor: pointer;
+}
+
+.btnCreate {
+  color: lightgrey;
+  background-color: lightslategray;
+  border: 1px solid lightslategrey;
+  padding: 10px;
+  font-size: 1.5rem;
+  border-radius: 0.25rem;
+  margin: 10px 10px 10px 1px;
+  cursor: pointer;
+}
+
+.title {
+  background-color: lightslategrey;
+  margin: 0px 345px;
+  border-radius: 6px;
+}
+
+.title h1 {
+  color: lightgray;
+  padding: 5px 10px 15px;
+  margin: 0px;
+  font-size: 2.5rem;
+}

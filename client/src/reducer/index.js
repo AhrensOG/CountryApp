@@ -9,6 +9,8 @@ import {
   GET_COUNTRIES_BY_NAME,
   CREATE_ACTIVITY,
   COUNTRY_DETAIL,
+  DELETE_ACTIVITY,
+  UPDATE_ACTIVITY,
 } from "../actions/actions";
 
 const initialState = {
@@ -20,6 +22,14 @@ const initialState = {
 
 function rootReducer (state = initialState, action){
   switch (action.type) {
+    case UPDATE_ACTIVITY:
+      return {
+        ...state,
+      }
+    case DELETE_ACTIVITY:
+      return {
+        ...state,
+      }
     case CREATE_ACTIVITY:
       return {
         ...state,

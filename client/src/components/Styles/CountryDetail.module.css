@@ -1,0 +1,101 @@
+.btn {
+  color: lightgrey;
+  background-color: lightslategray;
+  border: 1px solid lightslategrey;
+  padding: 10px;
+  font-size: 1.5rem;
+  border-radius: 0.25rem;
+  margin: 10px 10px 10px 1px;  
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: lightslategray;
+  margin: 25px 390px 0px;
+  align-items: stretch;
+  border-radius: 10px;
+}
+
+.img{
+  width: 100%;
+  border-radius: 10px;
+}
+
+.middleDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 5px 0px 15px 20px;
+}
+
+.activitiesDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.li {
+  list-style-type: none;
+  line-height: 2rem;
+  font-family: cursive;
+  font-size: 20px;
+  color: lightgrey;
+  font-weight: 600;
+}
+
+.p {
+  line-height: 2rem;
+  font-family: cursive;
+  font-size: 20px;
+  color: lightgrey;
+  font-weight: 600;
+}
+
+.nameAct {
+  list-style-type: none;
+  line-height: 2rem;
+  font-family: cursive;
+  font-size: 20px;
+  color: white;
+  font-weight: 600;
+}
+
+.nameCountry {
+  line-height: 2rem;
+  font-family: cursive;
+  font-size: 20px;
+  color: white;
+  font-weight: 600;
+}
+
+.divAct {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.middleDivAct {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 15px 5px 15px 70px;
+}
+
+.middleBtn {
+  color: lightslategray;
+  background-color: lightgray;
+  border: 1px solid lightgray;
+  padding: 2px;
+  font-size: 10px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}

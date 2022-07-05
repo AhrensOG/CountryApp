@@ -11,6 +11,8 @@ const {
    getAllContinents,
    getCountriesWhereContinent,
    filterCountriesByPopulation,
+   deleteActivities,
+   updateActivities,
   } = require('./controllers')
 
 const router = Router();
@@ -28,6 +30,13 @@ router.post('/activities',  (req, res) => {
   postActivities(req, res);
 })
 
+router.delete('/activities', (req, res) => {
+  deleteActivities(req, res)
+})
+
+router.put('/activities', (req, res) => {
+  updateActivities(req, res);
+})
 //--------------FILTERS ROUTES------------------
 
 router.get('/activities', (req, res) => {

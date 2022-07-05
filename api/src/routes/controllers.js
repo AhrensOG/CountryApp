@@ -119,6 +119,75 @@ const postActivities = async (req, res) => {
   }
 };
 
+const deleteActivities = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const activity = await TouristActivity.findByPk(id);
+    if(activity){
+      await TouristActivity.destroy({
+        where: {
+          id
+        }
+      })
+      return res.status(200).send({ data: 'Activity deleted succesfully' })
+    }
+    res.status(404).send({ data: 'Activity not found' })
+  } catch (error) {
+    res.status(404).send({data: error.message})
+  }
+}
+
+const updateActivities = async (req, res) => {
+  const { idAct, name, difficulty, duration, season } = req.body;
+  try {
+    if(!idAct) {
+      return res.status(400).send({ data: 'Missing Data' })
+    }
+
+    const id = Number(idAct)
+    
+    if (name) {
+      await TouristActivity.update({
+        name: name,
+      },{
+        where: {
+          id
+        }
+      })
+    }
+    if (difficulty) {
+      await TouristActivity.update({
+        difficulty: difficulty,
+      },{
+        where: {
+          id
+        }
+      })
+    }
+    if (duration) {
+      await TouristActivity.update({
+        duration: Number(duration),
+      },{
+        where: {
+          id
+        }
+      })
+    }
+    if (season) {
+      await TouristActivity.update({
+        season: season,
+      },{
+        where: {
+          id
+        }
+      })
+    }
+    return res.status(200).send('Activity updated successfully')
+  } catch (error) {
+    res.status(404).send({ data: error.message })
+  }
+}
+
 // ----------- FILTERS------------
 
 const getAllActivities =  (req, res) => {
@@ -224,4 +293,6 @@ module.exports = {
   getAllContinents,
   getCountriesWhereContinent,
   filterCountriesByPopulation,
+  deleteActivities,
+  updateActivities,
 }

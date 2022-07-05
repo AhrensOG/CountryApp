@@ -15,6 +15,8 @@ import Card from "./CountryCard";
 import Paged from "./Paged";
 import SearchBar from "./SearchBar";
 
+import s from './Styles/Home.module.css'
+
 
 export default function Home(){
   const dispatch = useDispatch();
@@ -24,18 +26,13 @@ export default function Home(){
   //------STATE FOR FILTERS------------
   const [order, setOrder] = useState('');
   const [currentPage, setCurrentPage ] = useState(1);
-  const [countriesPerPage, setCountriesPerPage] = useState(9);
+  const [countriesPerPage] = useState(10);
   const indexLastCountry = currentPage * countriesPerPage;
   const indexFirstCountry = indexLastCountry - countriesPerPage;
-  const currentCountries = allCountries.slice(indexFirstCountry, indexLastCountry);
+  const currentCountries = (currentPage === 1) ? allCountries.slice(0, 9) : allCountries.slice(indexFirstCountry - 1, indexLastCountry - 1);
   //-----------------------------------
 
   const paged = (pageNum) => {
-    if(currentPage !== 1){
-      setCountriesPerPage(10)
-    }else {
-      setCountriesPerPage(9)
-    }
     setCurrentPage(pageNum);
   };
 
@@ -79,33 +76,41 @@ export default function Home(){
   const handleResetFilters = (e) => {
     e.preventDefault()
     dispatch(getAllCountries())
+    setCurrentPage(1)
+    document.getElementById('orderByName').selectedIndex = 0;
+    document.getElementById('orderByPopulation').selectedIndex = 0;
+    document.getElementById('activities').selectedIndex = 0;
+    document.getElementById('continents').selectedIndex = 0;
   }
 
   return (
     <div>
-
-      <div>
-        <Link to='/activities'> Create Activity </Link>
+      <div className={s.title}>
+        <h1>¡Travel around the world!</h1>
+      </div>
+      <div className={s.search_create}>
+        <SearchBar />
+        <Link to='/activities'> <button className={s.btnCreate}> Create Activity </button> </Link>
       </div>
 
-      <div>
-          <button onClick={e => handleResetFilters(e)}> ResetFilters </button>
+      <div className={s.filters}>
+        <button className={s.btn} onClick={e => handleResetFilters(e)}> ResetFilters </button>
 
-        <select onChange={e => handleFilterByName(e)}>
+        <select id='orderByName' className={s.btn} onChange={e => handleFilterByName(e)}>
           <option key='' value=""> OrderByName </option>
           <option key='none' value="none"> All </option>
           <option key='asc' value="asc"> A - Z </option>
           <option key='desc' value="desc"> Z - A  </option>
         </select>
 
-        <select onChange={e => handleFilterByPopulation(e)}>
+        <select id="orderByPopulation" className={s.btn} onChange={e => handleFilterByPopulation(e)}>
           <option value=''> OrderByPopulation </option>
           <option value="all"> All </option>
           <option value="asc"> Min - Max </option>
           <option value="desc"> Max - Min </option>
         </select>
 
-        <select onChange={e => handleFilterActivity(e)}>
+        <select id="activities" className={s.btn} onChange={e => handleFilterActivity(e)}>
           <option value=""> Activities </option>
           <option value="all"> All </option>
           {
@@ -115,7 +120,7 @@ export default function Home(){
           }
         </select>
 
-        <select onChange={e => handleFilterContinent(e)}>
+        <select id="continents" className={s.btn} onChange={e => handleFilterContinent(e)}>
           <option value=""> Continents </option>
           <option value="all"> All </option>
           {
@@ -127,13 +132,11 @@ export default function Home(){
           }
         </select>
       </div>
-      <div>
-        <SearchBar />
-      </div>
-      <div>
+      
+      <div className={s.paged}>
         <Paged countriesPerPage={countriesPerPage} allCountries={allCountries.length} paged={paged}/>
       </div>
-      <div>
+      <div className={s.cards}>
         {
           currentCountries?.map(c => {
             return (

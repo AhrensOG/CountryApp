@@ -1,0 +1,29 @@
+body {
+  background-image: url('https://www.atlasandboots.com/wp-content/uploads/2021/01/fastest-internet-map-lead-image-2021.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.ldpg {
+  padding: 550px 0px 0px 0px;
+}
+
+.h1 {
+  color: lightslategray;
+  padding: 0px;
+  margin: 0px;
+  font-size: 2.5rem;
+}
+
+.btn {
+  color: lightgrey;
+  background-color: lightslategray;
+  border: 1px solid lightslategrey;
+  padding: 0.275rem 1.95rem;
+  font-size: 1.1rem;
+  border-radius: 0.25rem;
+}
+
+.btn:hover{
+  font-size: 1.3rem;
+}

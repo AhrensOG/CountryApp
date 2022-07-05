@@ -1,0 +1,20 @@
+.li {
+  list-style-type: none;
+  font-size: 23px;
+  color: lightgrey;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.ul {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 13px;
+}
+
+.nav {  
+  width: 85%;
+  margin-bottom: 15px;
+  background-color: lightslategray;
+  border-radius: 8px;
+}

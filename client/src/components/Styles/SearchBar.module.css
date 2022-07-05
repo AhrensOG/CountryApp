@@ -1,0 +1,23 @@
+.btn {
+  color: lightgrey;
+  background-color: lightslategray;
+  border: 1px solid lightslategrey;
+  padding: 10px;
+  font-size: 1.5rem;
+  border-radius: 0.25rem;
+  margin: 10px 10px 10px 1px;  
+  cursor: pointer;
+}
+
+.input {
+  font-size: 20px;
+  border: 1px solid lightslategrey;
+  border-radius: 5px;
+  width: 70%;
+  margin: 10px 1px 10px 10px;
+  padding: 10px 50px 10px 10px;
+}
+
+.container {
+  display: flex;
+}
