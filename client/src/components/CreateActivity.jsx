@@ -8,11 +8,14 @@ import s from './Styles/CreateActivity.module.css'
 
 function validate(input){
   let errors = {};
-  if(!input.name) errors.name = 'Name is required.'
+  if(!input.name || input.name === '') errors.name = 'Name is required.'
   if((input.difficulty !== '' && input.difficulty < 1 ) || input.difficulty > 5) errors.difficulty = 'Difficulty must be greater than 1 and less than 5.'
   if((input.duration !== '' && input.duration < 1) || input.duration > 24) errors.duration = 'Duration must be greater than 1 and less than 24.'
   if(!input.countryName.length) errors.countryName = 'Country is required.'
 
+  const btn = document.getElementById('btn')
+  btn.setAttribute('disabled', true)
+  if(!Object.keys(errors).length) btn.removeAttribute('disabled')
   return errors
 }
 
@@ -30,6 +33,7 @@ export default function CreateActivity() {
 
   useEffect(() => {
     dispatch(getAllCountries());
+    validate(input)
   }, [dispatch])
 
   function handleInputChange(e) {
