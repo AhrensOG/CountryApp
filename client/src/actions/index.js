@@ -14,7 +14,7 @@ import {
 function updateActivity(act){
   return async (dispatch) => {
     try {
-      const updateActivity = await axios.put('http://localhost:3001/activities', act)
+      const updateActivity = await axios.put('/activities', act)
       return updateActivity;
     } catch (error) {
       alert(error.response.data.data)
@@ -25,7 +25,7 @@ function updateActivity(act){
 function deleteActivity(id){
   return async (dispatch) => {
     try {
-      const deletedCountry = await axios.delete(`http://localhost:3001/activities?id=${id}`)
+      const deletedCountry = await axios.delete(`/activities?id=${id}`)
       return deletedCountry;
     } catch (error) {
       alert(error.response.data.data)
@@ -36,7 +36,7 @@ function deleteActivity(id){
 function createActivity (payload){
   return async (dispatch) => {
     try {
-      const countries = await axios.post('http://localhost:3001/activities',payload)
+      const countries = await axios.post('/activities',payload)
       console.log(countries)
       return countries;
     } catch (error) {
@@ -48,7 +48,7 @@ function createActivity (payload){
 function getAllCountries() {
   return async (dispatch) => {
     try {
-      const infoCountries = await axios.get('http://localhost:3001/countries')
+      const infoCountries = await axios.get('/countries')
       return dispatch({
         type: GET_ALL_COUNTRIES,
         payload: infoCountries.data,
@@ -62,7 +62,7 @@ function getAllCountries() {
 function getCountriesByName(name) {
   return async (dispatch) => {
     try {
-      const countries = await axios.get(`http://localhost:3001/countries?name=${name}`)
+      const countries = await axios.get(`/countries?name=${name}`)
       return dispatch({
         type: GET_COUNTRIES_BY_NAME,
         payload: countries.data,
@@ -76,7 +76,7 @@ function getCountriesByName(name) {
 function getAllActivities(){
   return async (dispatch) => {
     try {
-      const activities = await axios.get('http://localhost:3001/activities')
+      const activities = await axios.get('/activities')
       return dispatch({
         type: GET_ALL_ACTIVITIES,
         payload: activities.data,
@@ -90,7 +90,7 @@ function getAllActivities(){
 function getAllContinents(){
   return async (dispatch) => {
     try {
-      const continents = await axios.get(`http://localhost:3001/continents`)
+      const continents = await axios.get(`/continents`)
       return dispatch({
         type: GET_ALL_CONTINENTS,
         payload: continents.data,
@@ -104,7 +104,7 @@ function getAllContinents(){
 function filterCountriesByActivity(activity){
   return async (dispatch) => {
     try {
-      const countries = await axios.get(`http://localhost:3001/countriesActivity?nameActivity=${activity}`)
+      const countries = await axios.get(`/countriesActivity?nameActivity=${activity}`)
       return dispatch({
         type: FILTER_COUNTRIES_BY_ACTIVITY,
         payload: countries.data
@@ -118,7 +118,7 @@ function filterCountriesByActivity(activity){
 function filterCountriesByContinent(continent){
   return async (dispatch) => {
     try {
-      const countries = await axios.get(`http://localhost:3001/countriesContinent?nameContinent=${continent}`)
+      const countries = await axios.get(`/countriesContinent?nameContinent=${continent}`)
   
       return dispatch({
         type: FILTER_COUNTRIES_BY_CONTINENT,
@@ -141,7 +141,7 @@ function filterByName(payload){
 
 function filterByPopulation(value){
   return (dispatch) => {
-    axios.get(`http://localhost:3001/countriesPopulation?typeOrder=${value}`)
+    axios.get(`/countriesPopulation?typeOrder=${value}`)
     .then(r => {
       return dispatch({
         type: FILTER_BY_POPULATION,
@@ -154,7 +154,7 @@ function filterByPopulation(value){
 
 function getCountryDetail(id) {
   return (dispatch) => {
-    axios.get(`http://localhost:3001/countries/${id}`)
+    axios.get(`/countries/${id}`)
     .then(r => {
       return dispatch({
         type: COUNTRY_DETAIL,
