@@ -13,6 +13,7 @@ const {
    filterCountriesByPopulation,
    deleteActivities,
    updateActivities,
+   allFilters,
   } = require('./controllers')
 
 const router = Router();
@@ -63,6 +64,8 @@ router.get('/countriesContinent', (req, res) => {
 router.get('/countriesPopulation', (req, res) => {
   filterCountriesByPopulation(req, res);
 })
+
+router.get('/filters/:page', allFilters)
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 

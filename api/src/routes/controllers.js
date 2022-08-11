@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { Country, TouristActivity } = require('../db');
+const { Op, TableHints } = require('sequelize');
 
 
 const getInfoApi = async () => {
@@ -284,6 +285,64 @@ const filterCountriesByPopulation = (req, res) => {
   .catch(err => res.status(404).send({ data: err.message }))
 }
 
+const allFilters = async (req, res) => {
+  const { page } = req.params;
+  const { nameActivity, continent, orderPop } = req.query;
+  const pag = parseInt(page) || 1
+  const limitRend = pag === 1 ? 9 : 10;
+  try {
+    if(nameActivity) {
+      const countries = await Country.findAll({
+        include: {
+          model: TouristActivity,
+          as: "touristActivities",
+          through: {
+            attributes: []
+          }
+        },
+        where: {
+          '$touristActivities.name$': nameActivity,
+          continent: continent ? continent : { [Op.not]: null }
+        },
+        [orderPop && 'order']: [
+          orderPop === 'asc'? 
+          ['population', 'ASC'] 
+          : 
+          ['population', 'DESC']
+          
+        ],
+        offset: limitRend * (pag - 1),
+        // limit: limitRend,
+      })
+      res.status(200).send(countries)
+    }else {
+      const countries = await Country.findAll({
+        include: {
+          model: TouristActivity,
+          through: {
+            attributes: []
+          }
+        },
+        where: {
+          continent: continent ? continent : { [Op.not]: null }
+        },
+        [orderPop && 'order']: [
+          orderPop === 'asc'? 
+          ['population', 'ASC'] 
+          : 
+          ['population', 'DESC']
+          
+        ],
+        offset: limitRend * (pag - 1),
+        limit: limitRend,
+      })
+      res.status(200).send(countries)
+    }
+  } catch (error) {
+    res.status(400).send({data: error.message})
+  }
+}
+
 module.exports = {
   getCountries,
   getCountriesById,
@@ -295,4 +354,5 @@ module.exports = {
   filterCountriesByPopulation,
   deleteActivities,
   updateActivities,
+  allFilters
 }
