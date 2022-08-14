@@ -9,6 +9,7 @@ import {
   FILTER_BY_POPULATION,
   GET_COUNTRIES_BY_NAME,
   COUNTRY_DETAIL,
+  ALL_FILTERS,
 } from './actions';
 
 function updateActivity(act){
@@ -165,6 +166,25 @@ function getCountryDetail(id) {
   }
 }
 
+function filters(data) {
+  return async (dispatch) => {
+    const { nameActivity, continent, orderPop} = data
+    let res = [];
+    console.log(nameActivity);
+    continent && nameActivity? res = await axios.get(`/filters?orderPop=${orderPop}&nameActivity=${nameActivity}&continent=${continent}`) 
+    :
+    continent? res = await axios.get(`/filters?orderPop=${orderPop}&continent=${continent}`)
+    :
+    nameActivity? res = await axios.get(`/filters?orderPop=${orderPop}&nameActivity=${nameActivity}`)
+    :
+    res = await axios.get(`/filters?orderPop=${orderPop}`)
+    return dispatch({
+      type: ALL_FILTERS,
+      payload: res.data
+    })
+  }
+}
+
 export { 
   getAllCountries,
   getAllActivities,
@@ -178,4 +198,5 @@ export {
   getCountryDetail,
   deleteActivity,
   updateActivity,
+  filters,
 };

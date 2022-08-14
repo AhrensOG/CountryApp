@@ -10,6 +10,7 @@ import {
   filterCountriesByContinent,
   filterByName,
   filterByPopulation,
+  filters,
 } from "../actions";
 import Card from "./CountryCard";
 import Paged from "./Paged";
@@ -24,6 +25,8 @@ export default function Home(){
   const allActivities = useSelector(state => state.activities);
   const allContinents = useSelector(state => state.continents);
   //------STATE FOR FILTERS------------
+  const [typeFilter, setTypeFilter] = useState({})
+  const [filterFlag, setFilterFlag] = useState(false)
   const [order, setOrder] = useState('');
   const [currentPage, setCurrentPage ] = useState(1);
   const [countriesPerPage] = useState(10);
@@ -36,52 +39,48 @@ export default function Home(){
     setCurrentPage(pageNum);
   };
 
-
   useEffect(()=>{
     dispatch(getAllCountries());
     dispatch(getAllActivities());
     dispatch(getAllContinents())
   }, [dispatch]);
 
-  const handleFilterActivity = (e) => {
-    e.preventDefault();
-    if(e.target.value === '') return;
-      dispatch(filterCountriesByActivity(e.target.value))
-  };
-
-  const handleFilterContinent = (e) => {
-    e.preventDefault();
-    if(e.target.value === '') return;
-    dispatch(filterCountriesByContinent(e.target.value))
-  };
-
   const handleFilterByName = (e) => {
     e.preventDefault();
     if(e.target.value === '') return;
-    if(e.target.value === 'none'){
-      dispatch(getAllCountries())
-    }else{
-      dispatch(filterByName(e.target.value))
-    }
+    dispatch(filterByName(e.target.value))
     setCurrentPage(1);
     setOrder(`${e.target.value} Order`);
-  };
-
-  const handleFilterByPopulation = (e) => {
-    e.preventDefault();
-    if(e.target.value === '') return;
-    dispatch(filterByPopulation(e.target.value))
   };
 
   const handleResetFilters = (e) => {
     e.preventDefault()
     dispatch(getAllCountries())
     setCurrentPage(1)
+    setTypeFilter({})
     document.getElementById('orderByName').selectedIndex = 0;
-    document.getElementById('orderByPopulation').selectedIndex = 0;
-    document.getElementById('activities').selectedIndex = 0;
-    document.getElementById('continents').selectedIndex = 0;
+    document.getElementById('orderPop').selectedIndex = 0;
+    document.getElementById('nameActivity').selectedIndex = 0;
+    document.getElementById('continent').selectedIndex = 0;
   }
+
+  useEffect(() => {
+    if(filterFlag) dispatch(filters(typeFilter));
+    setFilterFlag(false)
+  }, [typeFilter, filterFlag])
+
+  const handleApplyFilters = (e) => {
+    e.preventDefault();
+    setFilterFlag(true)
+  }
+  const handleFilters = async (e) => {
+    e.preventDefault()
+    setTypeFilter({
+      ...typeFilter,
+      [e.target.id]: e.target.value,
+    })
+  }
+  
 
   return (
     <div>
@@ -97,22 +96,19 @@ export default function Home(){
         <button className={s.btn} onClick={e => handleResetFilters(e)}> ResetFilters </button>
 
         <select id='orderByName' className={s.btn} onChange={e => handleFilterByName(e)}>
-          <option key='' value=""> OrderByName </option>
-          <option key='none' value="none"> All </option>
+          <option value=""> OrderByName </option>
           <option key='asc' value="asc"> A - Z </option>
           <option key='desc' value="desc"> Z - A  </option>
         </select>
 
-        <select id="orderByPopulation" className={s.btn} onChange={e => handleFilterByPopulation(e)}>
-          <option value=''> OrderByPopulation </option>
-          <option value="all"> All </option>
+        <select id="orderPop" className={s.btn} onChange={e => handleFilters(e)}>
+          <option value={undefined}> OrderByPopulation </option>
           <option value="asc"> Min - Max </option>
           <option value="desc"> Max - Min </option>
         </select>
 
-        <select id="activities" className={s.btn} onChange={e => handleFilterActivity(e)}>
+        <select id="nameActivity" className={s.btn} onChange={e => handleFilters(e)}>
           <option value=""> Activities </option>
-          <option value="all"> All </option>
           {
             allActivities && allActivities.map(a => {
               return <option value={`${a.DISTINCT}`} key={a.DISTINCT}> {a.DISTINCT.toLowerCase()} </option>
@@ -120,7 +116,7 @@ export default function Home(){
           }
         </select>
 
-        <select id="continents" className={s.btn} onChange={e => handleFilterContinent(e)}>
+        <select id="continent" className={s.btn} onChange={e => handleFilters(e)}>
           <option value=""> Continents </option>
           <option value="all"> All </option>
           {
@@ -131,6 +127,9 @@ export default function Home(){
             })
           }
         </select>
+      </div>
+      <div>
+      <button className={s.btn} onClick={e => handleApplyFilters(e)}> ApplyFilters </button>
       </div>
       
       <div className={s.paged}>
