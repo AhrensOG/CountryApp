@@ -102,54 +102,12 @@ function getAllContinents(){
   }
 }
 
-function filterCountriesByActivity(activity){
-  return async (dispatch) => {
-    try {
-      const countries = await axios.get(`/countriesActivity?nameActivity=${activity}`)
-      return dispatch({
-        type: FILTER_COUNTRIES_BY_ACTIVITY,
-        payload: countries.data
-      })
-    } catch (error) {
-      alert(error.response.data.data)
-    }
-  }
-}
-
-function filterCountriesByContinent(continent){
-  return async (dispatch) => {
-    try {
-      const countries = await axios.get(`/countriesContinent?nameContinent=${continent}`)
-  
-      return dispatch({
-        type: FILTER_COUNTRIES_BY_CONTINENT,
-        payload: countries.data
-      })
-    } catch (error) {
-      alert(error.response.data.data)
-    }
-  }
-}
-
 function filterByName(payload){
   return (dispatch) => {
     return dispatch({
       type: FILTER_BY_NAME,
       payload
     })
-  }
-}
-
-function filterByPopulation(value){
-  return (dispatch) => {
-    axios.get(`/countriesPopulation?typeOrder=${value}`)
-    .then(r => {
-      return dispatch({
-        type: FILTER_BY_POPULATION,
-        payload: r.data,
-      })
-    })
-    .catch(error => alert(error.response.data.data))
   }
 }
 
@@ -189,10 +147,7 @@ export {
   getAllCountries,
   getAllActivities,
   getAllContinents,
-  filterCountriesByActivity,
-  filterCountriesByContinent,
   filterByName,
-  filterByPopulation,
   getCountriesByName,
   createActivity,
   getCountryDetail,

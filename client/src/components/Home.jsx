@@ -6,13 +6,11 @@ import {
   getAllCountries,
   getAllActivities,
   getAllContinents,
-  filterCountriesByActivity,
-  filterCountriesByContinent,
   filterByName,
-  filterByPopulation,
   filters,
 } from "../actions";
 import Card from "./CountryCard";
+import Loader from "./Loader";
 import Paged from "./Paged";
 import SearchBar from "./SearchBar";
 
@@ -25,6 +23,7 @@ export default function Home(){
   const allActivities = useSelector(state => state.activities);
   const allContinents = useSelector(state => state.continents);
   //------STATE FOR FILTERS------------
+  const [loading, setLoading] = useState(false)
   const [typeFilter, setTypeFilter] = useState({})
   const [filterFlag, setFilterFlag] = useState(false)
   const [order, setOrder] = useState('');
@@ -43,6 +42,7 @@ export default function Home(){
     dispatch(getAllCountries());
     dispatch(getAllActivities());
     dispatch(getAllContinents())
+    console.log(allCountries)
   }, [dispatch]);
 
   const handleFilterByName = (e) => {
@@ -55,6 +55,7 @@ export default function Home(){
 
   const handleResetFilters = (e) => {
     e.preventDefault()
+    setLoading(true)
     dispatch(getAllCountries())
     setCurrentPage(1)
     setTypeFilter({})
@@ -62,6 +63,7 @@ export default function Home(){
     document.getElementById('orderPop').selectedIndex = 0;
     document.getElementById('nameActivity').selectedIndex = 0;
     document.getElementById('continent').selectedIndex = 0;
+    setTimeout(()=> setLoading(false), 4500)
   }
 
   useEffect(() => {
@@ -137,11 +139,16 @@ export default function Home(){
       </div>
       <div className={s.cards}>
         {
+          loading ? <Loader/>
+          :
+          allCountries.length?
           currentCountries?.map(c => {
             return (
               <Card img={c.img} name={c.name} continent={c.continent} id={c.id} key={c.id}/>
             )
-          })
+          }) 
+          :
+          <Loader/> 
         }
       </div>
     </div>
