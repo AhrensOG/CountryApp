@@ -286,10 +286,7 @@ const filterCountriesByPopulation = (req, res) => {
 }
 
 const allFilters = async (req, res) => {
-  const { page } = req.params;
   const { nameActivity, continent, orderPop } = req.query;
-  const pag = parseInt(page) || 1
-  const limitRend = pag === 1 ? 9 : 10;
   try {
     if(nameActivity) {
       const countries = await Country.findAll({
@@ -311,8 +308,6 @@ const allFilters = async (req, res) => {
           ['population', 'DESC']
           
         ],
-        offset: limitRend * (pag - 1),
-        // limit: limitRend,
       })
       res.status(200).send(countries)
     }else {
@@ -333,8 +328,6 @@ const allFilters = async (req, res) => {
           ['population', 'DESC']
           
         ],
-        offset: limitRend * (pag - 1),
-        limit: limitRend,
       })
       res.status(200).send(countries)
     }
