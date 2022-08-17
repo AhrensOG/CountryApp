@@ -11,6 +11,7 @@ import {
   COUNTRY_DETAIL,
   DELETE_ACTIVITY,
   UPDATE_ACTIVITY,
+  ALL_FILTERS,
 } from "../actions/actions";
 
 const initialState = {
@@ -87,6 +88,11 @@ function rootReducer (state = initialState, action){
       return {
         ...state,
         countryDetail: action.payload,
+      }
+    case ALL_FILTERS:
+      return {
+        ...state,
+        countries: action.payload
       }
     default:
       return state;

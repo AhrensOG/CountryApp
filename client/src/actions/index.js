@@ -9,6 +9,7 @@ import {
   FILTER_BY_POPULATION,
   GET_COUNTRIES_BY_NAME,
   COUNTRY_DETAIL,
+  ALL_FILTERS,
 } from './actions';
 
 function updateActivity(act){
@@ -101,54 +102,12 @@ function getAllContinents(){
   }
 }
 
-function filterCountriesByActivity(activity){
-  return async (dispatch) => {
-    try {
-      const countries = await axios.get(`/countriesActivity?nameActivity=${activity}`)
-      return dispatch({
-        type: FILTER_COUNTRIES_BY_ACTIVITY,
-        payload: countries.data
-      })
-    } catch (error) {
-      alert(error.response.data.data)
-    }
-  }
-}
-
-function filterCountriesByContinent(continent){
-  return async (dispatch) => {
-    try {
-      const countries = await axios.get(`/countriesContinent?nameContinent=${continent}`)
-  
-      return dispatch({
-        type: FILTER_COUNTRIES_BY_CONTINENT,
-        payload: countries.data
-      })
-    } catch (error) {
-      alert(error.response.data.data)
-    }
-  }
-}
-
 function filterByName(payload){
   return (dispatch) => {
     return dispatch({
       type: FILTER_BY_NAME,
       payload
     })
-  }
-}
-
-function filterByPopulation(value){
-  return (dispatch) => {
-    axios.get(`/countriesPopulation?typeOrder=${value}`)
-    .then(r => {
-      return dispatch({
-        type: FILTER_BY_POPULATION,
-        payload: r.data,
-      })
-    })
-    .catch(error => alert(error.response.data.data))
   }
 }
 
@@ -165,17 +124,34 @@ function getCountryDetail(id) {
   }
 }
 
+function filters(data) {
+  return async (dispatch) => {
+    const { nameActivity, continent, orderPop} = data
+    let res = [];
+    console.log(nameActivity);
+    continent && nameActivity? res = await axios.get(`/filters?orderPop=${orderPop}&nameActivity=${nameActivity}&continent=${continent}`) 
+    :
+    continent? res = await axios.get(`/filters?orderPop=${orderPop}&continent=${continent}`)
+    :
+    nameActivity? res = await axios.get(`/filters?orderPop=${orderPop}&nameActivity=${nameActivity}`)
+    :
+    res = await axios.get(`/filters?orderPop=${orderPop}`)
+    return dispatch({
+      type: ALL_FILTERS,
+      payload: res.data
+    })
+  }
+}
+
 export { 
   getAllCountries,
   getAllActivities,
   getAllContinents,
-  filterCountriesByActivity,
-  filterCountriesByContinent,
   filterByName,
-  filterByPopulation,
   getCountriesByName,
   createActivity,
   getCountryDetail,
   deleteActivity,
   updateActivity,
+  filters,
 };
